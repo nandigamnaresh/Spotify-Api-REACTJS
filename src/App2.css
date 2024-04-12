@@ -1,0 +1,33 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+#spot-nav{
+    /* background-color: #8FB8CA; */
+    background-color: #006DA4;
+}
+#h6{
+    text-decoration: none;
+    color: white;
+}
+#h6:hover{
+    color: aqua;
+}
+#hover:hover{
+    transform: scale(1.15);
+    font-weight: bold;
+}
+#hover:active{
+    color: red;
+}
+
+
+
+#main-body:hover{
+    transform: scale(1.1);
+}
+
+#hello:hover{
+    background-color: red;
+    color: white;
+}

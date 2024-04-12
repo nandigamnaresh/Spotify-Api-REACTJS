@@ -1,0 +1,425 @@
+import React, { useState } from 'react';
+
+export default function Pvn() {
+    const [tracks, setTracks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    async function searchTracks() {
+        try {
+            const response = await fetch(https://v1.nocodeapi.com/venkatesh02/spotify/OrykmsmNxSnfeGeK/search?q=${searchTerm}&type=track);
+            const data = await response.json();
+            console.log(data);
+            setTracks(data.tracks.items);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    return (
+        <div className='container'>
+            <div>
+                <input
+                    type='text'
+                    placeholder='Enter artist name'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button onClick={searchTracks}>Search</button>
+            </div>
+
+
+            
+            {tracks.map((track, index) => (
+                <div key={index}>
+                    <h1>{track.name}</h1>
+                    {track.preview_url && <audio src={track.preview_url} controls />}
+                    {track.artists.map((artist, artistIndex) => (
+                        <p key={artistIndex}>{artist.name}</p>
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Cart.js
+import React from 'react';
+
+function Cart({ selectedAlbums }) {
+  return (
+    <div>
+      <h2>Shopping Cart</h2>
+      <ul>
+        {selectedAlbums.map(album => (
+          <li key={album.id}>{album.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default Cart;
+
+
+
+
+
+
+
+
+// Album.js
+import React, { useEffect, useState } from 'react';
+import './App2.css';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { SlHeart } from "react-icons/sl";
+import Cart from './Cart'; // Import the Cart component
+
+function Album() {
+  const [albums, setAlbums] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    // Fetch albums from the API
+    axios.get(`https://api.spotify.com/v1/albums`)
+      .then(response => {
+        setAlbums(response.data.items);
+      })
+      .catch(error => {
+        console.error('Error fetching albums:', error);
+      });
+  }, []);
+
+  const addToCart = (album) => {
+    setCartItems(prevCartItems => [...prevCartItems, album]);
+  };
+
+  return (
+    <div>
+      {/* Navigation Bar */}
+      {/* Search Bar */}
+
+      {/* Albums */}
+      <div className='container-fluid'>
+        <h2 className='text-center mt-5 mb-5 text-primary'>MUSICS</h2>
+        <div className='row ms-5 ps-5'>
+          {albums.map(album => (
+            <div className='col-lg-4 pb-5 text-center' id='main-body' key={album.id}>
+              <div className="card" style={{ width: "20rem", height: "100%" }}>
+                <div className="card-body">
+                  <a href={album.external_urls.spotify} target='_blank' rel="noopener noreferrer">
+                    <img src={album.images[0].url} style={{ width: "100%" }} id='data-img' alt={album.name} />
+                  </a>
+                  <h5 className='card-title'>{album.name}<SlHeart className='ms-3 fs-5 fw-bold' /></h5>
+                  <h6 className='card-text'>Artist: {album.artists[0].name}</h6>
+                  <button className="btn btn-primary" onClick={() => addToCart(album)}>Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cart */}
+      <Cart selectedAlbums={cartItems} />
+    </div>
+  );
+}
+
+export default Album;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import './App2.css';
+import Add from './Add';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { SlHeart } from "react-icons/sl";
+
+function App2() {
+    const [tracks, setTracks] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("sp balu");
+
+    useEffect(() => {
+        // This useEffect hook is currently commented out
+        // axios.get(`https://v1.nocodeapi.com/nareshnandigam/spotify/pTKoEgKBMDHBsIaQ/search?q=${searchQuery}&type=track`)
+        //     .then(response => {
+        //         console.log(response.data.tracks.items);
+        //         setTracks(response.data.tracks.items);
+        //     });
+    }, [searchQuery]);
+
+    const handleSearchInputChange = (event) => {
+        setSearchQuery(event.target.value);
+    }
+
+    const handleTrackClick = (trackData) => {
+        console.log(trackData); // Print the track data when clicked
+    }
+
+    return (
+        <div>
+            <div className='container-fluid' id='spot-nav'>
+                <div className='row pt-4 ps-4 pb-3 fw-bolder'>
+                    <div className='col-lg-1'>
+                        <Link to="/new" id='h6'><h6 id='hover'>NEW REAL</h6></Link>
+                    </div>
+                    <div className='col-lg-1'>
+                        <Link to="/" id='h6'><h6 id='hover'>TRACKS</h6></Link>
+                    </div>
+                    <div className='col-lg-1'>
+                        <Link to="/alb" id='h6'><h6 id='hover'>ALBUM</h6></Link>
+                    </div>
+                    <div className='col-lg-1'>
+                        <Link to="/myl" id='h6'><h6 id='hover'>MY LIBRARY</h6></Link>
+                    </div>
+                    <div className='col-lg-4'></div>
+                    <div className='col-lg-3'>
+                        <form className="d-flex">
+                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearchInputChange} />
+                            <button className="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div className='container-fluid'>
+                <h2 className='text-center mt-5 mb-5 text-primary'>MUSICS</h2>
+                <SlHeart className='ms-3 fs-5 fw-bold' onClick={() => console.log("Nandigam Naresh")} id='hello' />
+                <div className='row ms-5 ps-5'>
+                    {tracks && tracks.map(track =>
+                        <div className='col-lg-4 pb-5 text-center' id='main-body' key={track.id}>
+                            <div className="card" style={{ width: "20rem", height: "100%" }}>
+                                <div className="card-body">
+                                    <a href={track.external_urls.spotify} target='_blank'>
+                                        <img src={track.album.images[0].url} alt={track.album.name} style={{ width: "100%" }} id='data-img' />
+                                    </a>
+                                    <h5 className='card-title'>SONG NAME: {track.name}</h5>
+                                    <h6 className='card-text'>TYPE: {track.type}</h6>
+                                    <audio src={track.preview_url} controls />
+                                    <button onClick={() => handleTrackClick(track)}>Print Track Data</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            <Add tracks={[]} />
+        </div>
+    );
+}
+
+export default App2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import './App2.css';
+import Add from './Add';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { SlHeart } from "react-icons/sl";
+
+function App2() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    // Fetch data when the searchQuery changes
+    if (searchQuery) {
+      axios.get(`https://v1.nocodeapi.com/nareshnandigam/spotify/pTKoEgKBMDHBsIaQ/search?q=${searchQuery}&type=track`)
+        .then(response => {
+          setSearchResults(response.data.tracks.items);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  }, [searchQuery]);
+
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const addToFavorites = (track) => {
+    setFavorites(prevFavorites => [...prevFavorites, track]);
+  };
+
+  return (
+    <div>
+      <div className='container-fluid' id='spot-nav'>
+        {/* Navigation Links */}
+      </div>
+
+      <div className='container-fluid'>
+        <h2 className='text-center mt-5 mb-5 text-primary'>MUSICS</h2>
+        <div className='row ms-5 ps-5'>
+          {searchResults.map(track => (
+            <div className='col-lg-4 pb-5  text-center' id='main-body' key={track.id}>
+              <div className="card" style={{ width: "20rem", height: "100%" }}>
+                <div className="card-body">
+                  <a href={track.external_urls.spotify} target='_blank'>
+                    <img src={track.album.images[0].url} alt={track.album.name} style={{ width: "100%" }} id='data-img' />
+                  </a>
+                  <h5 className='card-title'>SONG NAME: {track.name}
+                    <SlHeart
+                      className='ms-3 fs-5 fw-bold'
+                      onClick={() => addToFavorites(track)}
+                      style={{ color: favorites.includes(track) ? 'red' : 'black', cursor: 'pointer' }}
+                    />
+                  </h5>
+                  <h6 className='card-text'>TYPE: {track.type}</h6>
+                  <audio src={track.preview_url} controls />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Add favorites={favorites} />
+    </div>
+  );
+}
+
+export default App2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Route path='/' element={<App2 addToFavorites={addToFavorites} />}></Route>
+
+const addToFavorites = (data) => {
+  // Handle adding data to favorites
+};
+
+
+const App2 = ({ addToFavorites }) => {
+  // Other code
+
+  const click = (data) => {
+    addToFavorites(data);
+    f(fulldata => [...fulldata, { ...data }]);
+  };
+
+  // Other code
+};
+
+
+const Add = ({ favorites }) => {
+  // Handle displaying favorites data
+};
+
+
+
+<Route path='/myl' element={<Add favorites={favorites} />}></Route>
+
+
+
+
+
+
+
+
+
+To pass data from the SlHeart click event in your App2 component to the Add component, you can do the following:
+
+Modify the click function in App2 to pass the clicked data to a function received as a prop.
+Pass this function down to the App2 component from its parent (App).
+Receive this function in the App2 component and use it to pass data to the Add component.
+Receive the data in the Add component and handle it as needed.
+Here's how you can modify your code to achieve this:
+
+In your App component, modify the Route for App2 to pass a function as a prop:
+
+jsx
+Copy code
+<Route path='/' element={<App2 addToFavorites={addToFavorites} />}></Route>
+Define the addToFavorites function in the App component to add data to favorites:
+
+jsx
+Copy code
+const addToFavorites = (data) => {
+  // Handle adding data to favorites
+};
+In your App2 component, modify the click function to call the addToFavorites function received as a prop:
+
+jsx
+Copy code
+const App2 = ({ addToFavorites }) => {
+  // Other code
+
+  const click = (data) => {
+    addToFavorites(data);
+    f(fulldata => [...fulldata, { ...data }]);
+  };
+
+  // Other code
+};
+Then, in your Add component, you can receive the favorites data as a prop and handle it as needed:
+
+jsx
+Copy code
+const Add = ({ favorites }) => {
+  // Handle displaying favorites data
+};
+And finally, make sure you pass down the favorites prop from App to Add:
+
+jsx
+Copy code
+<Route path='/myl' element={<Add favorites={favorites} />}></Route>
+With these changes, when the SlHeart icon is clicked in App2, the click function will be called, which in turn calls the addToFavorites function passed from App. The favorites data will then be updated in App, and passed down to Add for display.
